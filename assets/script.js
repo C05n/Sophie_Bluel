@@ -2,17 +2,8 @@ const galleryContainer = document.querySelector(".gallery");
 let categories = [];
 let works = [];
 
-async function fetchWorks() {
-   return fetch("http://localhost:5678/api/works")
-      .then(response => response.json())
-      .then(data => { return data; })
-      .catch(error => console.error('Erreur:', error));
-}
-
-async function fetchCategories() {
-    const response = await fetch("http://localhost:5678/api/categories");
-    return response.json();
-}
+import { fetchWorks } from './fetch.js';
+import { fetchCategories } from './fetch.js';
 
 async function initFilters() {
     works = await fetchWorks();
@@ -85,6 +76,3 @@ async function addGallery() {
 
 initFilters();
 addGallery();
-
-
-
