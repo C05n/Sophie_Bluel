@@ -2,24 +2,23 @@ const galleryContainer = document.querySelector(".gallery");
 let categories = [];
 let works = [];
 
-import { fetchWorks } from './fetch.js';
-import { fetchCategories } from './fetch.js';
+import { fetchWorks, fetchCategories } from './fetch.js';
 
 async function initFilters() {
     works = await fetchWorks();
     categories = await fetchCategories();
-    
+
     const filterContainer = document.createElement('div');
     filterContainer.classList.add('filter-container');
-    
+
     const allButton = createFilterButton('Tous');
     filterContainer.appendChild(allButton);
-    
+
     categories.forEach(category => {
         const button = createFilterButton(category.name);
         filterContainer.appendChild(button);
     });
-    
+
     galleryContainer.parentNode.insertBefore(filterContainer, galleryContainer);
 }
 
@@ -31,18 +30,18 @@ function createFilterButton(name) {
 }
 
 function filterWorks(category, clickedButton) {
-   document.querySelectorAll('.filter-container button').forEach(btn => {
-       btn.classList.remove('buttonActive');
-   });
+    document.querySelectorAll('.filter-container button').forEach(btn => {
+        btn.classList.remove('buttonActive');
+    });
 
-   clickedButton.classList.add('buttonActive');
+    clickedButton.classList.add('buttonActive');
 
     galleryContainer.innerHTML = '';
-    
-    const filteredWorks = category === 'Tous' 
-        ? works 
+
+    const filteredWorks = category === 'Tous'
+        ? works
         : works.filter(work => work.category.name === category);
-    
+
     filteredWorks.forEach(work => {
         const galleryItem = createGalleryItem(work);
         galleryContainer.appendChild(galleryItem);
@@ -62,17 +61,20 @@ function createGalleryItem(work) {
 
     galleryItem.appendChild(img);
     galleryItem.appendChild(figcaption);
-    
+
     return galleryItem;
 }
 
-async function addGallery() {
+export async function addGallery() {
     works = await fetchWorks();
     works.forEach(work => {
         const galleryItem = createGalleryItem(work);
         galleryContainer.appendChild(galleryItem);
     });
-}
+};
 
+import { updateLoginButton } from './login.js';
+
+document.addEventListener('DOMContentLoaded', updateLoginButton);
 initFilters();
 addGallery();
