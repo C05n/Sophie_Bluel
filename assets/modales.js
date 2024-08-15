@@ -93,7 +93,7 @@ function initializeModalFeatures() {
   const closeAddProjectBtn = addProjectModal.querySelector('.close');
   closeAddProjectBtn.addEventListener('click', () => {
     addProjectModal.classList.remove('modal-show');
-    resetPreviewImage();
+    resetAddProjectForm();
   });
 
   // 5. Fonctionnalités de suppression
@@ -124,7 +124,8 @@ function initializeModalFeatures() {
   }
 
   async function refreshGallery() {
-    const galleryElement = document.querySelector('.gallery').innerHTML = '';
+    const galleryElement = document.querySelector('.gallery');
+    galleryElement.innerHTML = '';
     await addGallery();
   }
 
@@ -169,7 +170,7 @@ function initializeModalFeatures() {
     modalReturn.addEventListener('click', () => {
       addProjectModal.classList.remove('modal-show');
       modal.classList.add('modal-show');
-      resetPreviewImage();
+      resetAddProjectForm();
     });
 
     const form = addProjectModal.querySelector('#addProjectForm');
@@ -207,7 +208,15 @@ function initializeModalFeatures() {
       if (response.ok) {
         document.querySelector('.gallery').innerHTML = '';
         addGallery();
-        closeModal();
+
+        document.querySelector('.add-project-modal').classList.remove('modal-show');
+
+        document.querySelector('.modal').classList.add('modal-show');
+
+        await populateModal();
+
+        event.target.reset();
+        resetPreviewImage();
       } else {
         console.error('Échec de l\'ajout du projet');
       }
@@ -215,6 +224,13 @@ function initializeModalFeatures() {
       console.error('Erreur:', error);
     }
   }
+
+  window.addEventListener('click', (event) => {
+    if (event.target === addProjectModal) {
+      addProjectModal.classList.remove('modal-show');
+      resetAddProjectForm();
+    }
+  });
 
   // 9. Gestion des images
   function previewImage(event) {
@@ -239,6 +255,12 @@ function initializeModalFeatures() {
     previewImg.style.display = 'none';
     fileInput.value = '';
   }
+}
+
+function resetAddProjectForm() {
+  const form = document.querySelector('#addProjectForm');
+  form.reset();
+  resetPreviewImage();
 }
 
 // 10. Initialisation au chargement du DOM

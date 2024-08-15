@@ -67,6 +67,9 @@ function createGalleryItem(work) {
 
 export async function addGallery() {
     works = await fetchWorks();
+
+    galleryContainer.innerHTML = '';
+
     works.forEach(work => {
         const galleryItem = createGalleryItem(work);
         galleryContainer.appendChild(galleryItem);
