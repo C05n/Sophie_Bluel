@@ -3,7 +3,7 @@ import { fetchWorks } from "./fetch.js";
 import { fetchCategories } from "./fetch.js";
 import { addGallery } from "./script.js";
 
-function isLoggedIn() {
+export function isLoggedIn() {
   return localStorage.getItem('token') !== null;
 }
 
@@ -197,6 +197,12 @@ function initializeModalFeatures() {
   async function handleAddProject(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
+    const imageFile = formData.get('image');
+
+    if (imageFile.size > 4 * 1024 * 1024) {
+    alert('L\'image ne doit pas dépasser 4Mo.');
+    return;
+    }
     try {
       const response = await fetch('http://localhost:5678/api/works', {
         method: 'POST',
@@ -238,6 +244,11 @@ function initializeModalFeatures() {
     if (file) {
       const reader = new FileReader();
       const previewImg = document.querySelector('.preview-image');
+      if (file.size > 4 * 1024 * 1024) {
+        alert('L\'image ne doit pas dépasser 4Mo. Veuillez choisir une image plus petite.');
+        event.target.value = ''; // Clear the file input
+        return;
+      }
 
       reader.onload = function (e) {
         previewImg.src = e.target.result;
@@ -247,14 +258,14 @@ function initializeModalFeatures() {
       reader.readAsDataURL(file);
     }
   }
+}
 
-  function resetPreviewImage() {
-    const previewImg = document.querySelector('.preview-image');
-    const fileInput = document.querySelector('#projectImage');
-    previewImg.src = '#';
-    previewImg.style.display = 'none';
-    fileInput.value = '';
-  }
+function resetPreviewImage() {
+  const previewImg = document.querySelector('.preview-image');
+  const fileInput = document.querySelector('#projectImage');
+  previewImg.src = '#';
+  previewImg.style.display = 'none';
+  fileInput.value = '';
 }
 
 function resetAddProjectForm() {

@@ -4,7 +4,12 @@ let works = [];
 
 import { fetchWorks, fetchCategories } from './fetch.js';
 
+import { isLoggedIn } from './modales.js';
+/*** Création des filtres ***/ 
 async function initFilters() {
+    if (isLoggedIn()) {
+        return;
+    }
     works = await fetchWorks();
     categories = await fetchCategories();
 
@@ -47,7 +52,7 @@ function filterWorks(category, clickedButton) {
         galleryContainer.appendChild(galleryItem);
     });
 }
-
+/*** ***/ 
 function createGalleryItem(work) {
     const galleryItem = document.createElement('figure');
     galleryItem.classList.add('gallery-item');
